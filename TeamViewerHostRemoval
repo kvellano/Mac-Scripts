@@ -1,0 +1,37 @@
+#!/bin/bash
+# TeamViewer Host full uninstall
+# Unload TeamViewer Helper
+/bin/launchctl remove com.teamviewer.Helper
+/bin/launchctl remove com.teamviewer_service
+/bin/launchctl remove com.teamviewer.teamviewer
+/bin/launchctl remove com.teamviewer.teamviewer_desktop
+# Quit TeamViewer
+/usr/bin/pgrep TeamViewer | xargs  kill -9
+# Remove LaunchAgents & LaunchDaemons
+/bin/rm /Library/LaunchAgents/com.teamviewer.teamviewer_desktop.plist
+/bin/rm /Library/LaunchAgents/com.teamviewer.teamviewer.plist
+/bin/rm /Library/LaunchDaemons/com.teamviewer.Helper.plist
+/bin/rm /Library/LaunchDaemons/com.teamviewer.teamviewer_service.plist
+# Remove App Support Folder
+/bin/rm -rf /Library/Application\ Support/TeamViewer\ Host
+# Remove app
+/bin/rm -rf /Applications/TeamViewerHost.app
+# Remove helper
+/bin/rm /Library/PrivilegedHelperTools/com.teamviewer.Helper
+# Remove config
+/bin/rm /Library/Preferences/com.teamviewer*
+# Recursively remove user configs
+for u in /Users/* ; do
+    /bin/rm -f "$u"/Library/Preferences/com.teamviewer*
+done
+# Recursively remove user Application Support
+for u in /Users/* ; do
+    /bin/rm -Rf "$u"/Library/Application\ Support/TeamViewer\ Host
+done
+# Recursively remove user cookies
+for u in /Users/* ; do
+    /bin/rm -Rf "$u"/Library/HTTPStorages/com.teamviewer.TeamViewerHost.binarycookies
+done
+# Remove Receipts
+/usr/sbin/pkgutil --pkgs | grep com.teamviewer | /usr/bin/xargs -n 1 /usr/sbin/pkgutil --forget
+exit 0

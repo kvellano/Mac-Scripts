@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Downloading and Installing Office 365"
+
+cd /tmp
+
+#Download Office 365 Installer
+curl -JL "https://go.microsoft.com/fwlink/?linkid=525133" -o "/tmp/office365.pkg"
+
+#Install
+sudo /usr/sbin/installer -pkg office365.pkg -target /
+
+echo "Installation Complete"
